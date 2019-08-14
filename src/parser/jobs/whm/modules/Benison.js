@@ -53,7 +53,7 @@ export default class Benison extends Module {
 			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.DIVINE_BENISON.icon,
 				content: <Trans id="whm.benison.suggestion.content">
-					Use <ActionLink {...ACTIONS.DIVINE_BENISON} /> more frequently. Frequent uses can mitigate a large amount of damage over the course of a fight, potentially resulting in less required healing GCDs.
+					Use <ActionLink {...ACTIONS.DIVINE_BENISON} /> more frequently :S. Frequent uses can mitigate a large amount of damage over the course of a fight, potentially resulting in less required healing GCDs.
 				</Trans>,
 				tiers: WASTED_USE_TIERS,
 				value: this._uses === 0 ? 100 : _usesMissed,

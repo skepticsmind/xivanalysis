@@ -1,4 +1,5 @@
 import Assize from './Assize'
+import Cure from './Cure'
 import DoTs from './DoTs'
 import Benison from './Benison'
 import Lilies from './Lilies'
@@ -8,6 +9,7 @@ import Speedmod from './Speedmod'
 export default [
 	Assize,
 	Benison,
+	Cure,
 	DoTs,
 	Lilies,
 	Overheal,

@@ -43,9 +43,10 @@ export default class Cure extends Module {
 		//let totalPotencyLoss
 
 		if (this._uses > 0) {
+			const cureMult = .6
 			//1.55 cures = 1 cure 2 or solace
 			//totalPotencyLoss = 350 * this._uses
-			gcdEfficiency = Math.ceil(this._uses*.6)
+			gcdEfficiency = Math.ceil(this._uses*cureMult)
 			gcdLost = this._uses - gcdEfficiency
 			//cant really gauge MP efficiency without looking at cure 2 and solace casts since one is free...
 			//this is the best case in which every cure would be used instead of cure 2

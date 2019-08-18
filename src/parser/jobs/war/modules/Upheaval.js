@@ -38,7 +38,6 @@ export default class Upheaval extends Module {
 		const timeHeld = ((event.timestamp - this._lastUse)/1000)
 		const drift = (this._lastUse === this.parser.fight.start_time) ? 0 : parseInt(timeHeld-ACTIONS.UPHEAVAL.cooldown)
 		this._totalDrift += drift
-		console.log(drift)
 		//update the last use
 		this._lastUse = event.timestamp
 	}

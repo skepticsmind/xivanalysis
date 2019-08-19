@@ -16,9 +16,10 @@ export default class TrickWindow extends Module {
 	_numUpheaval = 0
 	_numFC = 0
 	_trickWindows = []
-
+	_trickInFight = true
+	_trickNum = 0
+	_trickDuration = 10000
 	normalise(events) {
-		console.log(events)
 		let counter = 0
 		for (const event of events) {
 
@@ -38,40 +39,43 @@ export default class TrickWindow extends Module {
 		this.addHook('cast', {by: 'player', abilityId: ACTIONS.UPHEAVAL.id}, this._onUpheaval)
 		this.addHook('cast', {by: 'player', abilityId: ACTIONS.FELL_CLEAVE.id}, this._onFC)
 		this.addHook('complete', this._onComplete)
-		console.log('rip constructor')
+	}
+
+	inTrick(event){
+		while (event.timestamp > this._trickWindows[0] + this._trickDuration){
+			this._trickWindows.shift()
+			this._trickNum++
+		}
+		if(this._trickWindows.length !== 0 && event.timestamp > this._trickWindows[0] && event.timestamp > this._trickWindows[0] + 1000){
+			return true
+		}
+		return false
 	}
 
 	_onIC(event) {
-		for (let i = 0; i < this._trickWindows.length; i++) {
-			//console.log(this._trickWindows[i]\event.timestamp)
-			if (this._trickWindows[i] < event.timestamp && event.timestamp < this._trickWindows[i]+10000) {
-				this._numIC++
-			}
+		if (this.inTrick(event)) {
+			this._numIC++
 		}
 	}
 
 	_onUpheaval(event) {
-		for (let i = 0; i < this._trickWindows.length; i++) {
-			//console.log(this._trickWindows[i]\event.timestamp)
-			if (this._trickWindows[i] < event.timestamp && event.timestamp < this._trickWindows[i]+10000) {
-				this._numUpheaval++
-			}
+		if (this.inTrick(event)) {
+			this._numUpheaval++
 		}
 	}
 
 	_onFC(event) {
-		for (let i = 0; i < this._trickWindows.length; i++) {
-			//console.log(this._trickWindows[i]\event.timestamp)
-			if (this._trickWindows[i] < event.timestamp && event.timestamp < this._trickWindows[i]+10000) {
-				this._numFC++
-			}
+		if (this.inTrick(event)) {
+			this._numFC++
 		}
 	}
 
 	_onComplete() {
-		if (this._trickWindows !== []) {
-			if (this._numIC < this._trickWindows.length * 2) {
-				console.log('running if')
+		if (this._trickWindows.length !== 0){
+			this._trickNum++
+		}
+		if (this._trickInFight) {
+			if (this._numIC < this._trickNum * 2) {
 				this.suggestions.add(new Suggestion({
 					icon: ACTIONS.INNER_CHAOS.icon,
 					content: <Trans id="war.TA-window.suggestions.ic.content">
@@ -83,7 +87,7 @@ export default class TrickWindow extends Module {
 					</Trans>,
 				}))
 			}
-			if (this._numFC < this._trickWindows.length) {
+			if (this._numFC < this._trickNum) {
 				this.suggestions.add(new Suggestion({
 					icon: ACTIONS.FELL_CLEAVE.icon,
 					content: <Trans id="war.TA-window.suggestions.fc.content">
@@ -95,7 +99,7 @@ export default class TrickWindow extends Module {
 					</Trans>,
 				}))
 			}
-			if (this._numUpheaval < this._trickWindows.length) {
+			if (this._numUpheaval < this._trickNum) {
 				this.suggestions.add(new Suggestion({
 					icon: ACTIONS.UPHEAVAL.icon,
 					content: <Trans id="war.TA-window.suggestions.upheaval.content">
@@ -103,7 +107,7 @@ export default class TrickWindow extends Module {
 					</Trans>,
 					severity: SEVERITY.MINOR,
 					why: <Trans id="war.TA-window.suggestions.upheaval.why">
-						{this._numUpheaval} Upheavals were in TA, there were {this._trickWindows.length} tricks.
+						{this._numUpheaval} Upheavals were in TA, there were {this._trickNum} tricks.
 					</Trans>,
 				}))
 			}
